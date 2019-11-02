@@ -1,19 +1,18 @@
-
 use std::rc::Rc;
 
 pub struct List<T> {
-    head: Link<T>
+    head: Link<T>,
 }
 
 type Link<T> = Option<Rc<Node<T>>>;
 
 struct Node<T> {
     elem: T,
-    next: Link<T>
+    next: Link<T>,
 }
 
 pub struct Iter<'a, T> {
-    next: Option<&'a Node<T>>
+    next: Option<&'a Node<T>>,
 }
 impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
@@ -40,7 +39,7 @@ impl<T> Drop for List<T> {
                 Ok(mut node) => link = node.next.take(),
                 _ => break,
             }
-        };
+        }
     }
 }
 
@@ -53,7 +52,9 @@ impl<T> List<T> {
         let next = self.head.clone();
         let node = Node { elem, next };
 
-        List { head: Some(Rc::new(node)) }
+        List {
+            head: Some(Rc::new(node)),
+        }
     }
 
     pub fn head(&self) -> Option<&T> {
@@ -67,7 +68,9 @@ impl<T> List<T> {
     }
 
     pub fn iter(&self) -> Iter<'_, T> {
-        Iter { next: self.head.as_ref().map(|node| &**node)}
+        Iter {
+            next: self.head.as_ref().map(|node| &**node),
+        }
     }
 }
 
